@@ -2,6 +2,7 @@ using API.Data;
 using API.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -21,9 +22,9 @@ namespace API.Controllers
         // This controller will handle HTTP requests related to members (users).
         [HttpGet]
         // This action method will handle GET requests to retrieve all members.
-        public ActionResult<IReadOnlyList<AppUser>> GetMembers() // ActionResult is a base class for action results, List<AppUser> is the return type
+        public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers() // localhost:5001/api/members, async Task is used for asynchronous programming, 
         {
-            var members = context.Users.ToList(); // Retrieve all users from the database using the AppDbContext
+            var members = await context.Users.ToListAsync(); // Retrieve all members from the database using the AppDbContext, asynchronously
             return Ok(members); // Return the list of members with a 200 OK status
         }
 
@@ -31,9 +32,9 @@ namespace API.Controllers
         [HttpGet("{id}")] //localhost:5001/api/members/{id}
         // This action method will handle GET requests to retrieve a specific member by ID.
         // The {id} in the route indicates that this method expects an ID parameter in the URL.
-        public ActionResult<AppUser> GetMember(string id)
+        public async Task<ActionResult<AppUser>> GetMember(string id) // id is the unique identifier for the member, typically a string or GUID, asynchronous method that returns an ActionResult of type AppUser
         {
-            var member = context.Users.Find(id); // Find a member by ID using the AppDbContext
+            var member = await context.Users.FindAsync(id); // Find a member by ID using the AppDbContext
             if (member == null) // Check if the member exists
             {
                 return NotFound(); // Return a 404 Not Found status if the member does not exist
