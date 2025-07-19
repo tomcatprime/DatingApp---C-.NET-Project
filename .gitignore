@@ -12,7 +12,7 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-
+*.db
 # Mono auto generated files
 mono_crash.*
 
@@ -363,6 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /API/appsettings.json
 /API/appsettings.Development.json
-/API/dating.db
+/API/dating.db*
 /API/dating.db-shm
 /API/dating.db-wal
