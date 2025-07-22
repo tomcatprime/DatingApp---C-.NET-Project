@@ -15,20 +15,15 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
     // UseSqlite is used to configure the context to use SQLite database with the connection string
 });
+builder.Services.AddCors(); // Add CORS policy to allow requests from the client application, then after builder.Builder we can configure it.
+
+
 
 var app = builder.Build();
 
-// // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapOpenApi();
-// }
+// Configure the HTTP request pipeline.
 
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
-
-
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200")); // Allow requests from the specified origins
 
 app.MapControllers();
 
