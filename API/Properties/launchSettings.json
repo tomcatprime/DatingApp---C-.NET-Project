@@ -10,5 +10,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
-  }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=dating.db"
+}
 }

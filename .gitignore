@@ -366,3 +366,6 @@ FodyWeavers.xsd
 /API/dating.db*
 /API/dating.db-shm
 /API/dating.db-wal
+client/ssl/localhost-key.pem
+client/ssl/localhost.pem
+.gitignore
