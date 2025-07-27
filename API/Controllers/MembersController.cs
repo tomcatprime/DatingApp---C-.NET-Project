@@ -1,17 +1,18 @@
 using API.Data;
 using API.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")] // Route attribute to define the base URL for this controller - localhost:5001/api/members
-    [ApiController] // Indicates that this class is an API controller
-                    // This controller will handle requests related to members (users).
-                    //It is a base class from MVC controller without view rendering capabilities.
-                    // It provides features like model binding, validation, and automatic response formatting.
-    public class MembersController(AppDbContext context) : ControllerBase // ControllerBase is used for API controllers that do not require view rendering, derive from ControllerBase
+    //[Route("api/[controller]")] // Route attribute to define the base URL for this controller - localhost:5001/api/members
+    //[ApiController] // Indicates that this class is an API controller
+    // This controller will handle requests related to members (users).
+    //It is a base class from MVC controller without view rendering capabilities.
+    // It provides features like model binding, validation, and automatic response formatting.
+
+    //Changes done to the MembersController to use the new BaseApiController
+    public class MembersController(AppDbContext context) : BaseApiController // ControllerBase is used for API controllers that do not require view rendering, derive from ControllerBase
     //we want to return data from out database so we have to inject the AppDbContext into the MembersController
     {
         // Define actions here to handle HTTP requests related to members.

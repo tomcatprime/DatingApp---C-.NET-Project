@@ -2,9 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+//changes done to the MembersController to use the new BaseApiController
+public class WeatherForecastController : BaseApiController
 {
     private static readonly string[] Summaries = new[]
     {
