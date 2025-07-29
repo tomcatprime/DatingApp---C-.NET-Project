@@ -3,7 +3,8 @@ using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography; // For hashing passwords
+using System.Security.Cryptography;
+using System.Text; // For hashing passwords
 
 namespace API.Controllers
 {
@@ -34,6 +35,25 @@ namespace API.Controllers
 
             return Ok(user); // Return the created user with a 200 OK status
         }
+        [HttpPost("login")] // Endpoint to log in a user, api/account/login
+        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto) // Endpoint to log in a user, api/account/login, 
+        {
+            var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email); // Find the user by email asynchronously, embodying the email in the database
+
+            if (user == null) return Unauthorized("Invalid email address"); // If the user is not found, return Unauthorized with an error message
+            using var hmac = new HMACSHA512(user.PasswordSalt); // Create a new instance of HMACSHA, creating a new HMACSHA512 object with the user's password salt
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password)); // Compute the hash of the provided password using the user's password salt
+
+            for (var i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password"); // Compare the computed hash with the stored password hash, if they don't match, return Unauthorized with an error message
+
+            }
+
+            return Ok(user); // If the login is successful, return the user with a 200 OK status
+        }
+
 
         private async Task<bool> EmailExists(string email) // Check if the email already exists in the database
         {
