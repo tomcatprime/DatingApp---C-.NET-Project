@@ -4,15 +4,17 @@ using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using System.Text; // For hashing passwords
+using System.Text;
+using API.Interfaces;
+using API.Services; // For hashing passwords
 
 namespace API.Controllers
 {
-    public class AccountController(AppDbContext context) : BaseApiController
+    public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController
     {
 
         [HttpPost("register")] // Endpoint to register a new user, api/account/register
-        public async Task<ActionResult<AppUser>> Register(RegisterDto registerDto) // RegisterDto contains the required data for registration
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto) // RegisterDto contains the required data for registration
 
         {
 
@@ -33,10 +35,16 @@ namespace API.Controllers
             context.Users.Add(user); // Add the new user to the database context
             await context.SaveChangesAsync(); // Save changes to the database asynchronously
 
-            return Ok(user); // Return the created user with a 200 OK status
+            return Ok(new UserDto
+            {
+                Id = user.Id,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                Token = tokenService.CreateToken(user)
+            }); // Return the created user with a 200 OK status
         }
         [HttpPost("login")] // Endpoint to log in a user, api/account/login
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto) // Endpoint to log in a user, api/account/login, 
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto) // Endpoint to log in a user, api/account/login, 
         {
             var user = await context.Users.SingleOrDefaultAsync(x => x.Email == loginDto.Email); // Find the user by email asynchronously, embodying the email in the database
 
@@ -50,8 +58,14 @@ namespace API.Controllers
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid password"); // Compare the computed hash with the stored password hash, if they don't match, return Unauthorized with an error message
 
             }
-
-            return Ok(user); // If the login is successful, return the user with a 200 OK status
+            
+            return Ok(new UserDto
+            {
+                Id = user.Id,
+                DisplayName = user.DisplayName,
+                Email = user.Email,
+                Token = tokenService.CreateToken(user)
+            }); // If the login is successful, return the user with a 200 OK status
         }
 
 

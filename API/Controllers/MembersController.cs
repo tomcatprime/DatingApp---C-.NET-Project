@@ -1,5 +1,6 @@
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,8 @@ namespace API.Controllers
 
         //Creating engine for the MembersController
         // This controller will handle HTTP requests related to members (users).
+        
+        [Authorize]
         [HttpGet]
         // This action method will handle GET requests to retrieve all members.
         public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers() // localhost:5001/api/members, async Task is used for asynchronous programming, 
